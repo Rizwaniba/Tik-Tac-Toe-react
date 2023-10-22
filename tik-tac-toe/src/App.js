@@ -1,10 +1,28 @@
 import './App.css';
-import { useState } from 'react'; 
+import { useState, useEffect } from 'react'; 
 import Square from './Components/Square'
 import square from './Components/Square';
+import { Patterns } from './Components/Patterns';
 function App() {
     const [board, setBoard] = useState(["","","","","","","","",""])
-    const [player, setPlayer]=useState("X"); 
+    const [player, setPlayer]=useState("O"); 
+    const [result, setResult] = useState({winner : "none", state : "none"}) 
+    useEffect(() => {
+      checkWin();
+      if (player == "X"){
+        setPlayer("O")
+      }
+      else{
+        setPlayer("X")
+      }
+    }, [board]);
+
+    useEffect(()=>{
+      if (result.state != "none") {
+        alert(`Game Finished! Winning Player: ${result.winner}`);
+      }
+      
+    },[result])
     const chooseSquare = (square) => {
       setBoard(board.map((val, idx) => {
         if (idx == square && val == ""){
@@ -12,13 +30,26 @@ function App() {
         }
         return val;
       }))
-      if (player == "X"){
-        setPlayer("O")
-      }
-      else{
-        setPlayer("X")
-      } 
+      
     };
+    const checkWin = () => {
+      Patterns.forEach((currPattern) => {
+        const firstPlayer = board [currPattern[0]];
+        if (firstPlayer == "") return;
+        let foundWinningPattern = true
+        currPattern.forEach((idx) => {
+          if (board[idx] != firstPlayer){
+            foundWinningPattern = false 
+
+          }
+        })
+        
+        if (foundWinningPattern){
+          setResult({winner : player, state :"Won!"})
+        }
+
+      })
+    }
   return (
     <div className="App">
     <h1>Tic Tac Toe</h1>
@@ -29,14 +60,14 @@ function App() {
     <Square value={board[2]} chooseSquare={()=>{chooseSquare(2)}}/>
     </div>
     <div className='row'>
-    <Square value={board[0]} chooseSquare={()=>{alert(3)}}/>
-    <Square value={board[1]} chooseSquare={()=>{alert(4)}}/>
-    <Square value={board[2]} chooseSquare={()=>{alert(5)}}/>
+    <Square value={board[3]} chooseSquare={()=>{chooseSquare(3)}}/>
+    <Square value={board[4]} chooseSquare={()=>{chooseSquare(4)}}/>
+    <Square value={board[5]} chooseSquare={()=>{chooseSquare(5)}}/>
     </div>
     <div className='row'>
-    <Square value={board[0]} chooseSquare={()=>{alert(6)}}/>
-    <Square value={board[1]} chooseSquare={()=>{alert(7)}}/>
-    <Square value={board[2]} chooseSquare={()=>{alert(8)}}/>
+    <Square value={board[6]} chooseSquare={()=>{chooseSquare(6)}}/>
+    <Square value={board[7]} chooseSquare={()=>{chooseSquare(7)}}/>
+    <Square value={board[8]} chooseSquare={()=>{chooseSquare(8)}}/>
     </div>
     </div>
     </div>
